@@ -25,23 +25,18 @@ func (op *LabelChangeOperation) Id() entity.Id {
 	return idOperation(op, &op.OpBase)
 }
 
-// Apply apply the operation
+// Apply applies the operation
 func (op *LabelChangeOperation) Apply(snapshot *Snapshot) {
 	snapshot.addActor(op.Author_)
 
+	// Add in the set
 	for _, label := range op.Added {
 		snapshot.addLabel(label)
 	}
 
 	// Remove in the set
-	//TODO extract this in a separate methode
-	for _, removed := range op.Removed {
-		for i, label := range snapshot.labels {
-			if label == removed {
-				snapshot.labels[i] = snapshot.labels[len(snapshot.labels)-1]
-				snapshot.labels = snapshot.labels[:len(snapshot.labels)-1]
-			}
-		}
+	for _, label := range op.Removed {
+		snapshot.removeLabel(label)
 	}
 
 	// Sort

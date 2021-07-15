@@ -126,7 +126,7 @@ func (snap *Snapshot) appendComment(comment Comment) {
 	snap.comments = append(snap.comments, comment)
 }
 
-// Attach the supplied label to the snapshots
+// Add the supplied label to the snapshots labels
 func (snap *Snapshot) addLabel(label Label) {
 	for _, l := range snap.labels {
 		if l == label {
@@ -136,6 +136,16 @@ func (snap *Snapshot) addLabel(label Label) {
 	}
 
 	snap.labels = append(snap.labels, label)
+}
+
+// Remove the supplied label from the snapshots labels
+func (snap *Snapshot) removeLabel(removed Label) {
+	for i, label := range snap.labels {
+		if label == removed {
+			snap.labels[i] = snap.labels[len(snap.labels)-1]
+			snap.labels = snap.labels[:len(snap.labels)-1]
+		}
+	}
 }
 
 // append the operation author to the actors list
