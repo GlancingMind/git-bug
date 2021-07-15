@@ -71,9 +71,6 @@ func (op *EditCommentOperation) Apply(snapshot *Snapshot) {
 	snapshot.addActor(op.Author_)
 
 	// Updating the corresponding comment
-
-	//TODO use snapshot.SearchComment instead of iteration
-	//TODO put *editComment* in snapshot or add *edit* to Comment interface?
 	for i := range snapshot.Comments() {
 		if snapshot.Comments()[i].Id() == commentId {
 			snapshot.Comments()[i].Message = op.Message
