@@ -126,6 +126,18 @@ func (snap *Snapshot) appendComment(comment Comment) {
 	snap.comments = append(snap.comments, comment)
 }
 
+// Attach the supplied label to the snapshots
+func (snap *Snapshot) addLabel(label Label) {
+	for _, l := range snap.labels {
+		if l == label {
+			// Already exist
+			return
+		}
+	}
+
+	snap.labels = append(snap.labels, label)
+}
+
 // append the operation author to the actors list
 func (snap *Snapshot) addActor(actor identity.Interface) {
 	for _, a := range snap.actors {

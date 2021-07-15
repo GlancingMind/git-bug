@@ -29,18 +29,8 @@ func (op *LabelChangeOperation) Id() entity.Id {
 func (op *LabelChangeOperation) Apply(snapshot *Snapshot) {
 	snapshot.addActor(op.Author_)
 
-	// Add in the set
-AddLoop:
-	//TODO extract this in a separate methode
-	for _, added := range op.Added {
-		for _, label := range snapshot.labels {
-			if label == added {
-				// Already exist
-				continue AddLoop
-			}
-		}
-
-		snapshot.labels = append(snapshot.labels, added)
+	for _, label := range op.Added {
+		snapshot.addLabel(label)
 	}
 
 	// Remove in the set
