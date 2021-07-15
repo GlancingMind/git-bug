@@ -3,7 +3,6 @@ package bug
 import (
 	"encoding/json"
 	"fmt"
-	"sort"
 
 	"github.com/pkg/errors"
 
@@ -38,11 +37,6 @@ func (op *LabelChangeOperation) Apply(snapshot *Snapshot) {
 	for _, label := range op.Removed {
 		snapshot.removeLabel(label)
 	}
-
-	// Sort
-	sort.Slice(snapshot.labels, func(i, j int) bool {
-		return string(snapshot.labels[i]) < string(snapshot.labels[j])
-	})
 
 	item := &LabelChangeTimelineItem{
 		id:       op.Id(),
