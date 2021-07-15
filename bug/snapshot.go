@@ -128,14 +128,9 @@ func (snap *Snapshot) appendComment(comment Comment) {
 
 // Add the supplied label to the snapshots labels
 func (snap *Snapshot) addLabel(label Label) {
-	for _, l := range snap.labels {
-		if l == label {
-			// Already exist
-			return
-		}
+	if !snap.HasLabel(label) {
+		snap.labels = append(snap.labels, label)
 	}
-
-	snap.labels = append(snap.labels, label)
 }
 
 // Remove the supplied label from the snapshots labels
@@ -204,6 +199,15 @@ func (snap *Snapshot) HasActor(id entity.Id) bool {
 func (snap *Snapshot) HasAnyActor(ids ...entity.Id) bool {
 	for _, id := range ids {
 		if snap.HasActor(id) {
+			return true
+		}
+	}
+	return false
+}
+
+func (snap *Snapshot) HasLabel(label Label) bool {
+	for _, l := range snap.labels {
+		if l == label {
 			return true
 		}
 	}
