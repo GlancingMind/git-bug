@@ -25,15 +25,12 @@ func (op *SetStatusOperation) Id() entity.Id {
 func (op *SetStatusOperation) Apply(snapshot *Snapshot) {
 	snapshot.setStatusTo(op.Status)
 	snapshot.addActor(op.Author_)
-
-	item := &SetStatusTimelineItem{
+	snapshot.appendTimelineItem(&SetStatusTimelineItem{
 		id:       op.Id(),
 		Author:   op.Author_,
 		UnixTime: timestamp.Timestamp(op.UnixTime),
 		Status:   op.Status,
-	}
-
-	snapshot.timeline = append(snapshot.timeline, item)
+	})
 }
 
 func (op *SetStatusOperation) Validate() error {

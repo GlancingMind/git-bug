@@ -30,7 +30,6 @@ func (op *AddCommentOperation) Id() entity.Id {
 func (op *AddCommentOperation) Apply(snapshot *Snapshot) {
 	snapshot.addActor(op.Author_)
 	snapshot.addParticipant(op.Author_)
-
 	comment := Comment{
 		id:       entity.CombineIds(snapshot.Id(), op.Id()),
 		Message:  op.Message,
@@ -38,14 +37,10 @@ func (op *AddCommentOperation) Apply(snapshot *Snapshot) {
 		Files:    op.Files,
 		UnixTime: timestamp.Timestamp(op.UnixTime),
 	}
-
 	snapshot.appendComment(comment)
-
-	item := &AddCommentTimelineItem{
+	snapshot.appendTimelineItem(&AddCommentTimelineItem{
 		CommentTimelineItem: NewCommentTimelineItem(comment),
-	}
-
-	snapshot.timeline = append(snapshot.timeline, item)
+	})
 }
 
 func (op *AddCommentOperation) GetFiles() []repository.Hash {

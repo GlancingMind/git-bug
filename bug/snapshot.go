@@ -165,6 +165,11 @@ func (snap *Snapshot) addParticipant(participant identity.Interface) {
 	snap.participants = append(snap.participants, participant)
 }
 
+// Append the supplied timelineitem to the snapshots timeline
+func (snap *Snapshot) appendTimelineItem(item TimelineItem) {
+	snap.timeline = append(snap.timeline, item)
+}
+
 // HasParticipant return true if the id is a participant
 func (snap *Snapshot) HasParticipant(id entity.Id) bool {
 	for _, p := range snap.participants {

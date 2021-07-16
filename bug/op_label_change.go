@@ -38,15 +38,13 @@ func (op *LabelChangeOperation) Apply(snapshot *Snapshot) {
 		snapshot.removeLabel(label)
 	}
 
-	item := &LabelChangeTimelineItem{
+	snapshot.appendTimelineItem(&LabelChangeTimelineItem{
 		id:       op.Id(),
 		Author:   op.Author_,
 		UnixTime: timestamp.Timestamp(op.UnixTime),
 		Added:    op.Added,
 		Removed:  op.Removed,
-	}
-
-	snapshot.timeline = append(snapshot.timeline, item)
+	})
 }
 
 func (op *LabelChangeOperation) Validate() error {

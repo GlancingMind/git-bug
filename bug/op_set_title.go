@@ -27,16 +27,13 @@ func (op *SetTitleOperation) Id() entity.Id {
 func (op *SetTitleOperation) Apply(snapshot *Snapshot) {
 	snapshot.changeTitleTo(op.Title)
 	snapshot.addActor(op.Author_)
-
-	item := &SetTitleTimelineItem{
+	snapshot.appendTimelineItem(&SetTitleTimelineItem{
 		id:       op.Id(),
 		Author:   op.Author_,
 		UnixTime: timestamp.Timestamp(op.UnixTime),
 		Title:    op.Title,
 		Was:      op.Was,
-	}
-
-	snapshot.timeline = append(snapshot.timeline, item)
+	})
 }
 
 func (op *SetTitleOperation) Validate() error {
