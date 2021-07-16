@@ -124,10 +124,8 @@ func showDefaultFormatter(env *Env, snapshot *bug.Snapshot) error {
 
 	// Labels
 	var labels = make([]string, len(snapshot.Labels()))
-	//TODO can I replace the index here?
-	//TODO What about using Label::String() instead of string()?
-	for i := range snapshot.Labels() {
-		labels[i] = string(snapshot.Labels()[i])
+	for _, label := range snapshot.Labels() {
+		labels = append(labels, label.String())
 	}
 
 	env.out.Printf("labels: %s\n",
@@ -136,9 +134,8 @@ func showDefaultFormatter(env *Env, snapshot *bug.Snapshot) error {
 
 	// Actors
 	var actors = make([]string, len(snapshot.Actors()))
-	//TODO can I replace the index here?
-	for i := range snapshot.Actors() {
-		actors[i] = snapshot.Actors()[i].DisplayName()
+	for _, actor := range snapshot.Actors() {
+		actors = append(actors, actor.DisplayName())
 	}
 
 	env.out.Printf("actors: %s\n",
@@ -146,10 +143,9 @@ func showDefaultFormatter(env *Env, snapshot *bug.Snapshot) error {
 	)
 
 	// Participants
-	//TODO can I replace the index here?
 	var participants = make([]string, len(snapshot.Participants()))
-	for i := range snapshot.Participants() {
-		participants[i] = snapshot.Participants()[i].DisplayName()
+	for _, participant := range snapshot.Participants() {
+		participants = append(participants, participant.DisplayName())
 	}
 
 	env.out.Printf("participants: %s\n\n",
