@@ -47,9 +47,9 @@ func TestEdit(t *testing.T) {
 	require.Len(t, snapshot.Timeline()[0].(*CreateTimelineItem).History, 2)
 	require.Len(t, snapshot.Timeline()[1].(*AddCommentTimelineItem).History, 1)
 	require.Len(t, snapshot.Timeline()[3].(*AddCommentTimelineItem).History, 1)
-	require.Equal(t, snapshot.Comments()[0].Message, "create edited")
-	require.Equal(t, snapshot.Comments()[1].Message, "comment 1")
-	require.Equal(t, snapshot.Comments()[2].Message, "comment 2")
+	require.Equal(t, snapshot.Comments()[0].Message(), "create edited")
+	require.Equal(t, snapshot.Comments()[1].Message(), "comment 1")
+	require.Equal(t, snapshot.Comments()[2].Message(), "comment 2")
 
 	edit2 := NewEditCommentOp(rene, unix, comment1.Id(), "comment 1 edited", nil)
 	edit2.Apply(&snapshot)
@@ -58,9 +58,9 @@ func TestEdit(t *testing.T) {
 	require.Len(t, snapshot.Timeline()[0].(*CreateTimelineItem).History, 2)
 	require.Len(t, snapshot.Timeline()[1].(*AddCommentTimelineItem).History, 2)
 	require.Len(t, snapshot.Timeline()[3].(*AddCommentTimelineItem).History, 1)
-	require.Equal(t, snapshot.Comments()[0].Message, "create edited")
-	require.Equal(t, snapshot.Comments()[1].Message, "comment 1 edited")
-	require.Equal(t, snapshot.Comments()[2].Message, "comment 2")
+	require.Equal(t, snapshot.Comments()[0].Message(), "create edited")
+	require.Equal(t, snapshot.Comments()[1].Message(), "comment 1 edited")
+	require.Equal(t, snapshot.Comments()[2].Message(), "comment 2")
 
 	edit3 := NewEditCommentOp(rene, unix, comment2.Id(), "comment 2 edited", nil)
 	edit3.Apply(&snapshot)
@@ -69,9 +69,9 @@ func TestEdit(t *testing.T) {
 	require.Len(t, snapshot.Timeline()[0].(*CreateTimelineItem).History, 2)
 	require.Len(t, snapshot.Timeline()[1].(*AddCommentTimelineItem).History, 2)
 	require.Len(t, snapshot.Timeline()[3].(*AddCommentTimelineItem).History, 2)
-	require.Equal(t, snapshot.Comments()[0].Message, "create edited")
-	require.Equal(t, snapshot.Comments()[1].Message, "comment 1 edited")
-	require.Equal(t, snapshot.Comments()[2].Message, "comment 2 edited")
+	require.Equal(t, snapshot.Comments()[0].Message(), "create edited")
+	require.Equal(t, snapshot.Comments()[1].Message(), "comment 1 edited")
+	require.Equal(t, snapshot.Comments()[2].Message(), "comment 2 edited")
 }
 
 func TestEditCommentSerialize(t *testing.T) {

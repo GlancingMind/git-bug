@@ -15,7 +15,7 @@ type Comment struct {
 	// of the Operation that created the comment
 	id      entity.Id
 	Author  identity.Interface
-	Message string
+	message string
 	Files   []repository.Hash
 
 	// Creation time of the comment.
@@ -30,6 +30,11 @@ func (c Comment) Id() entity.Id {
 		panic("no id")
 	}
 	return c.id
+}
+
+// The Message of the comment
+func (c Comment) Message() string {
+	return c.message
 }
 
 // FormatTimeRel format the UnixTime of the comment for human consumption

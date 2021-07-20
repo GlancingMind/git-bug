@@ -52,7 +52,7 @@ func (op *EditCommentOperation) Apply(snapshot *Snapshot) {
 
 	comment := Comment{
 		id:       commentId,
-		Message:  op.Message,
+		message:  op.Message,
 		Files:    op.Files,
 		UnixTime: timestamp.Timestamp(op.UnixTime),
 	}
@@ -73,7 +73,7 @@ func (op *EditCommentOperation) Apply(snapshot *Snapshot) {
 	// Updating the corresponding comment
 	for i := range snapshot.Comments() {
 		if snapshot.Comments()[i].Id() == commentId {
-			snapshot.Comments()[i].Message = op.Message
+			snapshot.Comments()[i].message = op.Message
 			snapshot.Comments()[i].Files = op.Files
 			break
 		}

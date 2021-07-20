@@ -55,7 +55,7 @@ func (op *CreateOperation) Apply(snapshot *Snapshot) {
 
 	comment := Comment{
 		id:       entity.CombineIds(snapshot.Id(), op.Id()),
-		Message:  op.Message,
+		message:  op.Message,
 		Author:   op.Author_,
 		UnixTime: timestamp.Timestamp(op.UnixTime),
 	}

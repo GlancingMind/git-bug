@@ -165,10 +165,10 @@ func showDefaultFormatter(env *Env, snapshot *bug.Snapshot) error {
 			comment.Author.Email(),
 		)
 
-		if comment.Message == "" {
+		if comment.Message() == "" {
 			message = colors.BlackBold(colors.WhiteBg("No description provided."))
 		} else {
-			message = comment.Message
+			message = comment.Message()
 		}
 
 		env.out.Printf("%s%s\n\n\n",
@@ -206,7 +206,7 @@ func NewJSONComment(comment bug.Comment) JSONComment {
 		Id:      comment.Id().String(),
 		HumanId: comment.Id().Human(),
 		Author:  NewJSONIdentity(comment.Author),
-		Message: comment.Message,
+		Message: comment.Message(),
 	}
 }
 
@@ -309,10 +309,10 @@ func showOrgModeFormatter(env *Env, snapshot *bug.Snapshot) error {
 		env.out.Printf("** #%d %s\n",
 			i, comment.Author.DisplayName())
 
-		if comment.Message == "" {
+		if comment.Message() == "" {
 			message = "No description provided."
 		} else {
-			message = strings.ReplaceAll(comment.Message, "\n", "\n: ")
+			message = strings.ReplaceAll(comment.Message(), "\n", "\n: ")
 		}
 
 		env.out.Printf(": %s\n", message)

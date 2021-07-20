@@ -222,7 +222,7 @@ func (gi *gitlabImporter) ensureNote(repo *cache.RepoCache, b *cache.BugCache, n
 		// since gitlab doesn't provide the issue history
 		// we should check for "changed the description" notes and compare issue texts
 		// TODO: Check only one time and ignore next 'description change' within one issue
-		if errResolve == cache.ErrNoMatchingOp && issue.Description != firstComment.Message {
+		if errResolve == cache.ErrNoMatchingOp && issue.Description != firstComment.Message() {
 			// comment edition
 			op, err := b.EditCommentRaw(
 				author,
@@ -272,7 +272,7 @@ func (gi *gitlabImporter) ensureNote(repo *cache.RepoCache, b *cache.BugCache, n
 		}
 
 		// compare local bug comment with the new note body
-		if comment.Message != cleanText {
+		if comment.Message() != cleanText {
 			// comment edition
 			op, err := b.EditCommentRaw(
 				author,

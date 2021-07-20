@@ -543,7 +543,7 @@ func (c *RepoCache) addBugToSearchIndex(snap *bug.Snapshot) error {
 	}
 
 	for _, comment := range snap.Comments() {
-		searchableBug.Text = append(searchableBug.Text, normalize(comment.Message))
+		searchableBug.Text = append(searchableBug.Text, normalize(comment.Message()))
 	}
 
 	searchableBug.Text = append(searchableBug.Text, normalize(snap.Title()))

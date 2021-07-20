@@ -33,7 +33,7 @@ func TestCreate(t *testing.T) {
 	comment := Comment{
 		id:       entity.CombineIds(create.Id(), create.Id()),
 		Author:   rene,
-		Message:  "message",
+		message:  "message",
 		UnixTime: timestamp.Timestamp(create.UnixTime),
 	}
 

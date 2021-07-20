@@ -40,13 +40,13 @@ func NewCommentTimelineItem(comment Comment) CommentTimelineItem {
 	return CommentTimelineItem{
 		id:        comment.id,
 		Author:    comment.Author,
-		Message:   comment.Message,
+		Message:   comment.Message(),
 		Files:     comment.Files,
 		CreatedAt: comment.UnixTime,
 		LastEdit:  comment.UnixTime,
 		History: []CommentHistoryStep{
 			{
-				Message:  comment.Message,
+				Message:  comment.Message(),
 				UnixTime: comment.UnixTime,
 			},
 		},
@@ -59,12 +59,12 @@ func (c *CommentTimelineItem) Id() entity.Id {
 
 // Append will append a new comment in the history and update the other values
 func (c *CommentTimelineItem) Append(comment Comment) {
-	c.Message = comment.Message
+	c.Message = comment.Message()
 	c.Files = comment.Files
 	c.LastEdit = comment.UnixTime
 	c.History = append(c.History, CommentHistoryStep{
 		Author:   comment.Author,
-		Message:  comment.Message,
+		Message:  comment.Message(),
 		UnixTime: comment.UnixTime,
 	})
 }
