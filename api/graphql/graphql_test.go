@@ -90,7 +90,6 @@ func TestQueries(t *testing.T) {
                 }
                 nodes {
                   files
-                  message
                 }
               }
       
