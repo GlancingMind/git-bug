@@ -51,10 +51,10 @@ func (op *EditCommentOperation) Apply(snapshot *Snapshot) {
 	}
 
 	comment := Comment{
-		id:       commentId,
-		message:  op.Message,
-		files:    op.Files,
-		UnixTime: timestamp.Timestamp(op.UnixTime),
+		id:        commentId,
+		message:   op.Message,
+		files:     op.Files,
+		createdAt: timestamp.Timestamp(op.UnixTime),
 	}
 
 	switch target := target.(type) {

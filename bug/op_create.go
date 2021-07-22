@@ -54,10 +54,10 @@ func (op *CreateOperation) Apply(snapshot *Snapshot) {
 	snapshot.changeTitleTo(op.Title)
 
 	comment := Comment{
-		id:       entity.CombineIds(snapshot.Id(), op.Id()),
-		message:  op.Message,
-		Author:   op.Author_,
-		UnixTime: timestamp.Timestamp(op.UnixTime),
+		id:        entity.CombineIds(snapshot.Id(), op.Id()),
+		message:   op.Message,
+		Author:    op.Author_,
+		createdAt: timestamp.Timestamp(op.UnixTime),
 	}
 
 	snapshot.appendComment(comment)

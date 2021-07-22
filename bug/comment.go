@@ -23,7 +23,7 @@ type Comment struct {
 
 	// Creation time of the comment.
 	// Should be used only for human display, never for ordering as we can't rely on it in a distributed system.
-	UnixTime timestamp.Timestamp
+	createdAt timestamp.Timestamp
 }
 
 // Id return the Comment identifier
@@ -59,13 +59,18 @@ func (c *Comment) Files() []repository.Hash {
 	return c.files
 }
 
+// CreationTimestamp returns the date and time of comments creation
+func (c Comment) CreationTimestamp() timestamp.Timestamp {
+	return c.createdAt
+}
+
 // FormatTimeRel format the UnixTime of the comment for human consumption
 func (c Comment) FormatTimeRel() string {
-	return humanize.Time(c.UnixTime.Time())
+	return humanize.Time(c.createdAt.Time())
 }
 
 func (c Comment) FormatTime() string {
-	return c.UnixTime.Time().Format("Mon Jan 2 15:04:05 2006 +0200")
+	return c.createdAt.Time().Format("Mon Jan 2 15:04:05 2006 +0200")
 }
 
 // Sign post method for gqlgen
