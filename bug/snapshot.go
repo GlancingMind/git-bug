@@ -111,6 +111,18 @@ func (snap *Snapshot) SearchComment(id entity.Id) (*Comment, error) {
 	return nil, fmt.Errorf("comment item not found")
 }
 
+// UpdateComment will replace the comment with the given id by another comment
+func (snap *Snapshot) UpdateComment(id entity.Id, comment Comment) error {
+	for i := range snap.comments {
+		if snap.comments[i].id == id {
+			snap.comments[i] = comment
+			return nil
+		}
+	}
+
+	return fmt.Errorf("comment item not found")
+}
+
 // Change current status to the new status
 func (snap *Snapshot) setStatusTo(newStatus Status) {
 	snap.status = newStatus

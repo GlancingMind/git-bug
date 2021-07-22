@@ -71,13 +71,7 @@ func (op *EditCommentOperation) Apply(snapshot *Snapshot) {
 	snapshot.addActor(op.Author_)
 
 	// Updating the corresponding comment
-	for i := range snapshot.Comments() {
-		if snapshot.Comments()[i].Id() == commentId {
-			snapshot.Comments()[i].ReplaceMessageWith(op.Message)
-			snapshot.Comments()[i].AttacheFiles(op.Files)
-			break
-		}
-	}
+	snapshot.UpdateComment(commentId, comment)
 }
 
 func (op *EditCommentOperation) GetFiles() []repository.Hash {
