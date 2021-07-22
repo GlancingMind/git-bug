@@ -41,7 +41,7 @@ func runComment(env *Env, args []string) error {
 
 		env.out.Printf("Author: %s\n", colors.Magenta(comment.Author.DisplayName()))
 		env.out.Printf("Id: %s\n", colors.Cyan(comment.Id().Human()))
-		env.out.Printf("Date: %s\n\n", comment.FormatTime())
+		env.out.Printf("Date: %s\n\n", comment.CreationTimestamp().FormatTime())
 		env.out.Println(text.LeftPadLines(comment.Message(), 4))
 	}
 

@@ -3,8 +3,6 @@ package bug
 import (
 	"fmt"
 
-	"github.com/dustin/go-humanize"
-
 	"github.com/MichaelMure/git-bug/entity"
 	"github.com/MichaelMure/git-bug/identity"
 	"github.com/MichaelMure/git-bug/repository"
@@ -62,15 +60,6 @@ func (c *Comment) Files() []repository.Hash {
 // CreationTimestamp returns the date and time of comments creation
 func (c Comment) CreationTimestamp() timestamp.Timestamp {
 	return c.createdAt
-}
-
-// FormatTimeRel format the UnixTime of the comment for human consumption
-func (c Comment) FormatTimeRel() string {
-	return humanize.Time(c.createdAt.Time())
-}
-
-func (c Comment) FormatTime() string {
-	return c.createdAt.Time().Format("Mon Jan 2 15:04:05 2006 +0200")
 }
 
 // Sign post method for gqlgen
