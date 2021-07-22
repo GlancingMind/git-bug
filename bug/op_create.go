@@ -49,24 +49,22 @@ func (op *CreateOperation) Apply(snapshot *Snapshot) {
 	}
 
 	snapshot.id = op.Id()
-
 	snapshot.addActor(op.Author_)
 	snapshot.addParticipant(op.Author_)
-
-	snapshot.Title = op.Title
+	snapshot.changeTitleTo(op.Title)
 
 	comment := Comment{
-		id:       entity.CombineIds(snapshot.Id(), op.Id()),
-		Message:  op.Message,
-		Author:   op.Author_,
-		UnixTime: timestamp.Timestamp(op.UnixTime),
+		id:        entity.CombineIds(snapshot.Id(), op.Id()),
+		message:   op.Message,
+		Author:    op.Author_,
+		createdAt: timestamp.Timestamp(op.UnixTime),
 	}
 
-	snapshot.Comments = []Comment{comment}
-	snapshot.Author = op.Author_
+	snapshot.appendComment(comment)
+	snapshot.author = op.Author_
 	snapshot.CreateTime = op.Time()
 
-	snapshot.Timeline = []TimelineItem{
+	snapshot.timeline = []TimelineItem{
 		&CreateTimelineItem{
 			CommentTimelineItem: NewCommentTimelineItem(comment),
 		},

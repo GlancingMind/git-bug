@@ -39,7 +39,7 @@ func (ls *labelSelect) SetBug(cache *cache.RepoCache, bug *cache.BugCache) {
 	ls.labels = cache.ValidLabels()
 
 	// Find which labels are currently applied to the bug
-	bugLabels := bug.Snapshot().Labels
+	bugLabels := bug.Snapshot().Labels()
 	labelSelect := make([]bool, len(ls.labels))
 	for i, label := range ls.labels {
 		for _, bugLabel := range bugLabels {
@@ -270,7 +270,7 @@ func (ls *labelSelect) abort(g *gocui.Gui, v *gocui.View) error {
 }
 
 func (ls *labelSelect) saveAndReturn(g *gocui.Gui, v *gocui.View) error {
-	bugLabels := ls.bug.Snapshot().Labels
+	bugLabels := ls.bug.Snapshot().Labels()
 	var selectedLabels []bug.Label
 	for i, label := range ls.labels {
 		if ls.labelSelect[i] {

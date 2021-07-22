@@ -147,7 +147,7 @@ func (bug *Bug) Operations() []Operation {
 func (bug *Bug) Compile() Snapshot {
 	snap := Snapshot{
 		id:     bug.Id(),
-		Status: OpenStatus,
+		status: OpenStatus,
 	}
 
 	for _, op := range bug.Operations() {

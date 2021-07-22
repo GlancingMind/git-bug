@@ -30,7 +30,7 @@ func runTitle(env *Env, args []string) error {
 
 	snap := b.Snapshot()
 
-	env.out.Println(snap.Title)
+	env.out.Println(snap.Title())
 
 	return nil
 }

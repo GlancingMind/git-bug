@@ -200,7 +200,7 @@ func (je *jiraExporter) exportBug(ctx context.Context, b *cache.BugCache, out ch
 
 	// first operation is always createOp
 	createOp := snapshot.Operations[0].(*bug.CreateOperation)
-	author := snapshot.Author
+	author := snapshot.Author()
 
 	// skip bug if it was imported from some other bug system
 	origin, ok := snapshot.GetCreateMetadata(core.MetaKeyOrigin)

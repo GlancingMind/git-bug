@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/MichaelMure/go-term-text"
+	text "github.com/MichaelMure/go-term-text"
 	"github.com/awesome-gocui/gocui"
 
 	"github.com/MichaelMure/git-bug/bug"
@@ -216,7 +216,7 @@ func (sb *showBug) renderMain(g *gocui.Gui, mainView *gocui.View) error {
 
 	sb.mainSelectableView = nil
 
-	createTimelineItem := snap.Timeline[0].(*bug.CreateTimelineItem)
+	createTimelineItem := snap.Timeline()[0].(*bug.CreateTimelineItem)
 
 	edited := ""
 	if createTimelineItem.Edited() {
@@ -225,9 +225,9 @@ func (sb *showBug) renderMain(g *gocui.Gui, mainView *gocui.View) error {
 
 	bugHeader := fmt.Sprintf("[%s] %s\n\n[%s] %s opened this bug on %s%s",
 		colors.Cyan(snap.Id().Human()),
-		colors.Bold(snap.Title),
-		colors.Yellow(snap.Status),
-		colors.Magenta(snap.Author.DisplayName()),
+		colors.Bold(snap.Title()),
+		colors.Yellow(snap.Status()),
+		colors.Magenta(snap.Author().DisplayName()),
 		snap.CreateTime.Format(timeLayout),
 		edited,
 	)
@@ -241,7 +241,7 @@ func (sb *showBug) renderMain(g *gocui.Gui, mainView *gocui.View) error {
 	_, _ = fmt.Fprint(v, bugHeader)
 	y0 += lines + 1
 
-	for _, op := range snap.Timeline {
+	for _, op := range snap.Timeline() {
 		viewName := op.Id().String()
 
 		// TODO: me might skip the rendering of blocks that are outside of the view
@@ -427,8 +427,8 @@ func (sb *showBug) renderSidebar(g *gocui.Gui, sideView *gocui.View) error {
 
 	sb.sideSelectableView = nil
 
-	labelStr := make([]string, len(snap.Labels))
-	for i, l := range snap.Labels {
+	labelStr := make([]string, len(snap.Labels()))
+	for i, l := range snap.Labels() {
 		lc := l.Color()
 		lc256 := lc.Term256()
 		labelStr[i] = lc256.Escape() + "◼ " + lc256.Unescape() + l.String()
@@ -622,7 +622,7 @@ func (sb *showBug) setTitle(g *gocui.Gui, v *gocui.View) error {
 }
 
 func (sb *showBug) toggleOpenClose(g *gocui.Gui, v *gocui.View) error {
-	switch sb.bug.Snapshot().Status {
+	switch sb.bug.Snapshot().Status() {
 	case bug.OpenStatus:
 		_, err := sb.bug.Close()
 		return err

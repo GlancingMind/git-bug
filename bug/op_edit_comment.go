@@ -38,9 +38,9 @@ func (op *EditCommentOperation) Apply(snapshot *Snapshot) {
 	commentId := entity.CombineIds(snapshot.Id(), op.Target)
 
 	var target TimelineItem
-	for i, item := range snapshot.Timeline {
+	for i, item := range snapshot.timeline {
 		if item.Id() == commentId {
-			target = snapshot.Timeline[i]
+			target = snapshot.timeline[i]
 			break
 		}
 	}
@@ -51,10 +51,10 @@ func (op *EditCommentOperation) Apply(snapshot *Snapshot) {
 	}
 
 	comment := Comment{
-		id:       commentId,
-		Message:  op.Message,
-		Files:    op.Files,
-		UnixTime: timestamp.Timestamp(op.UnixTime),
+		id:        commentId,
+		message:   op.Message,
+		files:     op.Files,
+		createdAt: timestamp.Timestamp(op.UnixTime),
 	}
 
 	switch target := target.(type) {
@@ -71,14 +71,7 @@ func (op *EditCommentOperation) Apply(snapshot *Snapshot) {
 	snapshot.addActor(op.Author_)
 
 	// Updating the corresponding comment
-
-	for i := range snapshot.Comments {
-		if snapshot.Comments[i].Id() == commentId {
-			snapshot.Comments[i].Message = op.Message
-			snapshot.Comments[i].Files = op.Files
-			break
-		}
-	}
+	snapshot.UpdateComment(commentId, comment)
 }
 
 func (op *EditCommentOperation) GetFiles() []repository.Hash {

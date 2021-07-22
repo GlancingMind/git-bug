@@ -31,7 +31,7 @@ func runStatus(env *Env, args []string) error {
 
 	snap := b.Snapshot()
 
-	env.out.Println(snap.Status)
+	env.out.Println(snap.Status())
 
 	return nil
 }

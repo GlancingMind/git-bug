@@ -31,23 +31,23 @@ func TestCreate(t *testing.T) {
 	require.NoError(t, id.Validate())
 
 	comment := Comment{
-		id:       entity.CombineIds(create.Id(), create.Id()),
-		Author:   rene,
-		Message:  "message",
-		UnixTime: timestamp.Timestamp(create.UnixTime),
+		id:        entity.CombineIds(create.Id(), create.Id()),
+		Author:    rene,
+		message:   "message",
+		createdAt: timestamp.Timestamp(create.UnixTime),
 	}
 
 	expected := Snapshot{
 		id:    create.Id(),
-		Title: "title",
-		Comments: []Comment{
+		title: "title",
+		comments: []Comment{
 			comment,
 		},
-		Author:       rene,
-		Participants: []identity.Interface{rene},
-		Actors:       []identity.Interface{rene},
+		author:       rene,
+		participants: []identity.Interface{rene},
+		actors:       []identity.Interface{rene},
 		CreateTime:   create.Time(),
-		Timeline: []TimelineItem{
+		timeline: []TimelineItem{
 			&CreateTimelineItem{
 				CommentTimelineItem: NewCommentTimelineItem(comment),
 			},

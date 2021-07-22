@@ -50,7 +50,7 @@ func runTitleEdit(env *Env, opts titleEditOptions, args []string) error {
 			env.err.Println("No title given. Use -m or -F option to specify a title. Aborting.")
 			return nil
 		}
-		opts.title, err = input.BugTitleEditorInput(env.repo, snap.Title)
+		opts.title, err = input.BugTitleEditorInput(env.repo, snap.Title())
 		if err == input.ErrEmptyTitle {
 			env.out.Println("Empty title, aborting.")
 			return nil
@@ -60,7 +60,7 @@ func runTitleEdit(env *Env, opts titleEditOptions, args []string) error {
 		}
 	}
 
-	if opts.title == snap.Title {
+	if opts.title == snap.Title() {
 		env.err.Println("No change, aborting.")
 	}
 

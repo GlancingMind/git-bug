@@ -289,7 +289,11 @@ func (c *RepoCache) ResolveComment(prefix string) (*BugCache, entity.Id, error) 
 			return nil, entity.UnsetId, err
 		}
 
-		for _, comment := range b.Snapshot().Comments {
+		//TODO iteration of comments should be replaced via *SearchComment*.
+		//	To prevent this error in further code, the removal of the access to comments and instead provide a
+		//	clear interface to operate on these comments. Especially as the returned array is a reference...
+		//	E.g. provide Snapshot::Comments(Handler), with Handler being the function to operate on comments
+		for _, comment := range b.Snapshot().Comments() {
 			if comment.Id().HasPrefix(prefix) {
 				matchingBugIds = append(matchingBugIds, bugId)
 				matchingBug = b
@@ -538,11 +542,11 @@ func (c *RepoCache) addBugToSearchIndex(snap *bug.Snapshot) error {
 		return sb.String()
 	}
 
-	for _, comment := range snap.Comments {
-		searchableBug.Text = append(searchableBug.Text, normalize(comment.Message))
+	for _, comment := range snap.Comments() {
+		searchableBug.Text = append(searchableBug.Text, normalize(comment.Message()))
 	}
 
-	searchableBug.Text = append(searchableBug.Text, normalize(snap.Title))
+	searchableBug.Text = append(searchableBug.Text, normalize(snap.Title()))
 
 	index, err := c.repo.GetBleveIndex("bug")
 	if err != nil {

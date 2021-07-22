@@ -3,7 +3,6 @@ package bug
 import (
 	"encoding/json"
 	"fmt"
-	"sort"
 
 	"github.com/pkg/errors"
 
@@ -25,47 +24,27 @@ func (op *LabelChangeOperation) Id() entity.Id {
 	return idOperation(op, &op.OpBase)
 }
 
-// Apply apply the operation
+// Apply applies the operation
 func (op *LabelChangeOperation) Apply(snapshot *Snapshot) {
 	snapshot.addActor(op.Author_)
 
 	// Add in the set
-AddLoop:
-	for _, added := range op.Added {
-		for _, label := range snapshot.Labels {
-			if label == added {
-				// Already exist
-				continue AddLoop
-			}
-		}
-
-		snapshot.Labels = append(snapshot.Labels, added)
+	for _, label := range op.Added {
+		snapshot.addLabel(label)
 	}
 
 	// Remove in the set
-	for _, removed := range op.Removed {
-		for i, label := range snapshot.Labels {
-			if label == removed {
-				snapshot.Labels[i] = snapshot.Labels[len(snapshot.Labels)-1]
-				snapshot.Labels = snapshot.Labels[:len(snapshot.Labels)-1]
-			}
-		}
+	for _, label := range op.Removed {
+		snapshot.removeLabel(label)
 	}
 
-	// Sort
-	sort.Slice(snapshot.Labels, func(i, j int) bool {
-		return string(snapshot.Labels[i]) < string(snapshot.Labels[j])
-	})
-
-	item := &LabelChangeTimelineItem{
+	snapshot.appendTimelineItem(&LabelChangeTimelineItem{
 		id:       op.Id(),
 		Author:   op.Author_,
 		UnixTime: timestamp.Timestamp(op.UnixTime),
 		Added:    op.Added,
 		Removed:  op.Removed,
-	}
-
-	snapshot.Timeline = append(snapshot.Timeline, item)
+	})
 }
 
 func (op *LabelChangeOperation) Validate() error {
@@ -164,7 +143,7 @@ func ChangeLabels(b Interface, author identity.Interface, unixTime int64, add, r
 		}
 
 		// check that the label doesn't already exist
-		if labelExist(snap.Labels, label) {
+		if labelExist(snap.labels, label) {
 			results = append(results, LabelChangeResult{Label: label, Status: LabelChangeAlreadySet})
 			continue
 		}
@@ -183,7 +162,7 @@ func ChangeLabels(b Interface, author identity.Interface, unixTime int64, add, r
 		}
 
 		// check that the label actually exist
-		if !labelExist(snap.Labels, label) {
+		if !labelExist(snap.labels, label) {
 			results = append(results, LabelChangeResult{Label: label, Status: LabelChangeDoesntExist})
 			continue
 		}

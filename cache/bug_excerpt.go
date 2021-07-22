@@ -57,13 +57,13 @@ func (l LegacyAuthorExcerpt) DisplayName() string {
 }
 
 func NewBugExcerpt(b bug.Interface, snap *bug.Snapshot) *BugExcerpt {
-	participantsIds := make([]entity.Id, 0, len(snap.Participants))
-	for _, participant := range snap.Participants {
+	participantsIds := make([]entity.Id, 0, len(snap.Participants()))
+	for _, participant := range snap.Participants() {
 		participantsIds = append(participantsIds, participant.Id())
 	}
 
-	actorsIds := make([]entity.Id, 0, len(snap.Actors))
-	for _, actor := range snap.Actors {
+	actorsIds := make([]entity.Id, 0, len(snap.Actors()))
+	for _, actor := range snap.Actors() {
 		actorsIds = append(actorsIds, actor.Id())
 	}
 
@@ -73,18 +73,18 @@ func NewBugExcerpt(b bug.Interface, snap *bug.Snapshot) *BugExcerpt {
 		EditLamportTime:   b.EditLamportTime(),
 		CreateUnixTime:    b.FirstOp().Time().Unix(),
 		EditUnixTime:      snap.EditTime().Unix(),
-		Status:            snap.Status,
-		Labels:            snap.Labels,
+		Status:            snap.Status(),
+		Labels:            snap.Labels(),
 		Actors:            actorsIds,
 		Participants:      participantsIds,
-		Title:             snap.Title,
-		LenComments:       len(snap.Comments),
+		Title:             snap.Title(),
+		LenComments:       len(snap.Comments()),
 		CreateMetadata:    b.FirstOp().AllMetadata(),
 	}
 
-	switch snap.Author.(type) {
+	switch snap.Author().(type) {
 	case *identity.Identity, *identity.IdentityStub, *IdentityCache:
-		e.AuthorId = snap.Author.Id()
+		e.AuthorId = snap.Author().Id()
 	default:
 		panic("unhandled identity type")
 	}

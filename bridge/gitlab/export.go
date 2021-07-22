@@ -171,7 +171,7 @@ func (ge *gitlabExporter) exportBug(ctx context.Context, b *cache.BugCache, out 
 
 	// first operation is always createOp
 	createOp := snapshot.Operations[0].(*bug.CreateOperation)
-	author := snapshot.Author
+	author := snapshot.Author()
 
 	// get gitlab bug ID
 	gitlabID, ok := snapshot.GetCreateMetadata(metaKeyGitlabId)

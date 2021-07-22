@@ -53,7 +53,7 @@ func runSelect(env *Env, args []string) error {
 		return err
 	}
 
-	env.out.Printf("selected bug %s: %s\n", b.Id().Human(), b.Snapshot().Title)
+	env.out.Printf("selected bug %s: %s\n", b.Id().Human(), b.Snapshot().Title())
 
 	return nil
 }

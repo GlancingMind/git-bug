@@ -97,7 +97,7 @@ func (lb *lazyBug) Comments() ([]bug.Comment, error) {
 	if err != nil {
 		return nil, err
 	}
-	return lb.snap.Comments, nil
+	return lb.snap.Comments(), nil
 }
 
 func (lb *lazyBug) Labels() []bug.Label {
@@ -141,7 +141,7 @@ func (lb *lazyBug) Timeline() ([]bug.TimelineItem, error) {
 	if err != nil {
 		return nil, err
 	}
-	return lb.snap.Timeline, nil
+	return lb.snap.Timeline(), nil
 }
 
 func (lb *lazyBug) Operations() ([]bug.Operation, error) {
@@ -167,36 +167,36 @@ func (l *loadedBug) LastEdit() time.Time {
 }
 
 func (l *loadedBug) Status() bug.Status {
-	return l.Snapshot.Status
+	return l.Snapshot.Status()
 }
 
 func (l *loadedBug) Title() string {
-	return l.Snapshot.Title
+	return l.Snapshot.Title()
 }
 
 func (l *loadedBug) Comments() ([]bug.Comment, error) {
-	return l.Snapshot.Comments, nil
+	return l.Snapshot.Comments(), nil
 }
 
 func (l *loadedBug) Labels() []bug.Label {
-	return l.Snapshot.Labels
+	return l.Snapshot.Labels()
 }
 
 func (l *loadedBug) Author() (IdentityWrapper, error) {
-	return NewLoadedIdentity(l.Snapshot.Author), nil
+	return NewLoadedIdentity(l.Snapshot.Author()), nil
 }
 
 func (l *loadedBug) Actors() ([]IdentityWrapper, error) {
-	res := make([]IdentityWrapper, len(l.Snapshot.Actors))
-	for i, actor := range l.Snapshot.Actors {
+	res := make([]IdentityWrapper, len(l.Snapshot.Actors()))
+	for i, actor := range l.Snapshot.Actors() {
 		res[i] = NewLoadedIdentity(actor)
 	}
 	return res, nil
 }
 
 func (l *loadedBug) Participants() ([]IdentityWrapper, error) {
-	res := make([]IdentityWrapper, len(l.Snapshot.Participants))
-	for i, participant := range l.Snapshot.Participants {
+	res := make([]IdentityWrapper, len(l.Snapshot.Participants()))
+	for i, participant := range l.Snapshot.Participants() {
 		res[i] = NewLoadedIdentity(participant)
 	}
 	return res, nil
@@ -207,7 +207,7 @@ func (l *loadedBug) CreatedAt() time.Time {
 }
 
 func (l *loadedBug) Timeline() ([]bug.TimelineItem, error) {
-	return l.Snapshot.Timeline, nil
+	return l.Snapshot.Timeline(), nil
 }
 
 func (l *loadedBug) Operations() ([]bug.Operation, error) {

@@ -32,7 +32,7 @@ func runLabel(env *Env, args []string) error {
 
 	snap := b.Snapshot()
 
-	for _, l := range snap.Labels {
+	for _, l := range snap.Labels() {
 		env.out.Println(l)
 	}
 

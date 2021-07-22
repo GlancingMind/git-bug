@@ -1,11 +1,12 @@
 package bug
 
 import (
-	"github.com/dustin/go-humanize"
+	"fmt"
 
 	"github.com/MichaelMure/git-bug/entity"
 	"github.com/MichaelMure/git-bug/identity"
 	"github.com/MichaelMure/git-bug/repository"
+	"github.com/MichaelMure/git-bug/util/text"
 	"github.com/MichaelMure/git-bug/util/timestamp"
 )
 
@@ -15,12 +16,12 @@ type Comment struct {
 	// of the Operation that created the comment
 	id      entity.Id
 	Author  identity.Interface
-	Message string
-	Files   []repository.Hash
+	message string
+	files   []repository.Hash
 
 	// Creation time of the comment.
 	// Should be used only for human display, never for ordering as we can't rely on it in a distributed system.
-	UnixTime timestamp.Timestamp
+	createdAt timestamp.Timestamp
 }
 
 // Id return the Comment identifier
@@ -32,13 +33,33 @@ func (c Comment) Id() entity.Id {
 	return c.id
 }
 
-// FormatTimeRel format the UnixTime of the comment for human consumption
-func (c Comment) FormatTimeRel() string {
-	return humanize.Time(c.UnixTime.Time())
+// The Message of the comment
+func (c Comment) Message() string {
+	return c.message
 }
 
-func (c Comment) FormatTime() string {
-	return c.UnixTime.Time().Format("Mon Jan 2 15:04:05 2006 +0200")
+// Replace the comment message with the given one.
+func (c *Comment) ReplaceMessageWith(message string) error {
+	if !text.Safe(message) {
+		return fmt.Errorf("message is not fully printable")
+	}
+	c.message = message
+	return nil
+}
+
+// Attache the files to the comment.
+func (c *Comment) AttacheFiles(files []repository.Hash) {
+	c.files = files
+}
+
+// Return the comments attached files.
+func (c *Comment) Files() []repository.Hash {
+	return c.files
+}
+
+// CreationTimestamp returns the date and time of comments creation
+func (c Comment) CreationTimestamp() timestamp.Timestamp {
+	return c.createdAt
 }
 
 // Sign post method for gqlgen

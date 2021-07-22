@@ -50,16 +50,16 @@ func runShow(env *Env, opts showOptions, args []string) error {
 
 	snap := b.Snapshot()
 
-	if len(snap.Comments) == 0 {
+	if len(snap.Comments()) == 0 {
 		return errors.New("invalid bug: no comment")
 	}
 
 	if opts.fields != "" {
 		switch opts.fields {
 		case "author":
-			env.out.Printf("%s\n", snap.Author.DisplayName())
+			env.out.Printf("%s\n", snap.Author().DisplayName())
 		case "authorEmail":
-			env.out.Printf("%s\n", snap.Author.Email())
+			env.out.Printf("%s\n", snap.Author().Email())
 		case "createTime":
 			env.out.Printf("%s\n", snap.CreateTime.String())
 		case "lastEdit":
@@ -69,23 +69,23 @@ func runShow(env *Env, opts showOptions, args []string) error {
 		case "id":
 			env.out.Printf("%s\n", snap.Id())
 		case "labels":
-			for _, l := range snap.Labels {
+			for _, l := range snap.Labels() {
 				env.out.Printf("%s\n", l.String())
 			}
 		case "actors":
-			for _, a := range snap.Actors {
+			for _, a := range snap.Actors() {
 				env.out.Printf("%s\n", a.DisplayName())
 			}
 		case "participants":
-			for _, p := range snap.Participants {
+			for _, p := range snap.Participants() {
 				env.out.Printf("%s\n", p.DisplayName())
 			}
 		case "shortId":
 			env.out.Printf("%s\n", snap.Id().Human())
 		case "status":
-			env.out.Printf("%s\n", snap.Status)
+			env.out.Printf("%s\n", snap.Status())
 		case "title":
-			env.out.Printf("%s\n", snap.Title)
+			env.out.Printf("%s\n", snap.Title())
 		default:
 			return fmt.Errorf("\nUnsupported field: %s\n", opts.fields)
 		}
@@ -109,12 +109,12 @@ func showDefaultFormatter(env *Env, snapshot *bug.Snapshot) error {
 	// Header
 	env.out.Printf("%s [%s] %s\n\n",
 		colors.Cyan(snapshot.Id().Human()),
-		colors.Yellow(snapshot.Status),
-		snapshot.Title,
+		colors.Yellow(snapshot.Status()),
+		snapshot.Title(),
 	)
 
 	env.out.Printf("%s opened this issue %s\n",
-		colors.Magenta(snapshot.Author.DisplayName()),
+		colors.Magenta(snapshot.Author().DisplayName()),
 		snapshot.CreateTime.String(),
 	)
 
@@ -123,9 +123,9 @@ func showDefaultFormatter(env *Env, snapshot *bug.Snapshot) error {
 	)
 
 	// Labels
-	var labels = make([]string, len(snapshot.Labels))
-	for i := range snapshot.Labels {
-		labels[i] = string(snapshot.Labels[i])
+	var labels = make([]string, len(snapshot.Labels()))
+	for _, label := range snapshot.Labels() {
+		labels = append(labels, label.String())
 	}
 
 	env.out.Printf("labels: %s\n",
@@ -133,9 +133,9 @@ func showDefaultFormatter(env *Env, snapshot *bug.Snapshot) error {
 	)
 
 	// Actors
-	var actors = make([]string, len(snapshot.Actors))
-	for i := range snapshot.Actors {
-		actors[i] = snapshot.Actors[i].DisplayName()
+	var actors = make([]string, len(snapshot.Actors()))
+	for _, actor := range snapshot.Actors() {
+		actors = append(actors, actor.DisplayName())
 	}
 
 	env.out.Printf("actors: %s\n",
@@ -143,9 +143,9 @@ func showDefaultFormatter(env *Env, snapshot *bug.Snapshot) error {
 	)
 
 	// Participants
-	var participants = make([]string, len(snapshot.Participants))
-	for i := range snapshot.Participants {
-		participants[i] = snapshot.Participants[i].DisplayName()
+	var participants = make([]string, len(snapshot.Participants()))
+	for _, participant := range snapshot.Participants() {
+		participants = append(participants, participant.DisplayName())
 	}
 
 	env.out.Printf("participants: %s\n\n",
@@ -155,7 +155,7 @@ func showDefaultFormatter(env *Env, snapshot *bug.Snapshot) error {
 	// Comments
 	indent := "  "
 
-	for i, comment := range snapshot.Comments {
+	for i, comment := range snapshot.Comments() {
 		var message string
 		env.out.Printf("%s%s #%d %s <%s>\n\n",
 			indent,
@@ -165,10 +165,10 @@ func showDefaultFormatter(env *Env, snapshot *bug.Snapshot) error {
 			comment.Author.Email(),
 		)
 
-		if comment.Message == "" {
+		if comment.Message() == "" {
 			message = colors.BlackBold(colors.WhiteBg("No description provided."))
 		} else {
-			message = comment.Message
+			message = comment.Message()
 		}
 
 		env.out.Printf("%s%s\n\n\n",
@@ -206,7 +206,7 @@ func NewJSONComment(comment bug.Comment) JSONComment {
 		Id:      comment.Id().String(),
 		HumanId: comment.Id().Human(),
 		Author:  NewJSONIdentity(comment.Author),
-		Message: comment.Message,
+		Message: comment.Message(),
 	}
 }
 
@@ -216,24 +216,24 @@ func showJsonFormatter(env *Env, snapshot *bug.Snapshot) error {
 		HumanId:    snapshot.Id().Human(),
 		CreateTime: NewJSONTime(snapshot.CreateTime, 0),
 		EditTime:   NewJSONTime(snapshot.EditTime(), 0),
-		Status:     snapshot.Status.String(),
-		Labels:     snapshot.Labels,
-		Title:      snapshot.Title,
-		Author:     NewJSONIdentity(snapshot.Author),
+		Status:     snapshot.Status().String(),
+		Labels:     snapshot.Labels(),
+		Title:      snapshot.Title(),
+		Author:     NewJSONIdentity(snapshot.Author()),
 	}
 
-	jsonBug.Actors = make([]JSONIdentity, len(snapshot.Actors))
-	for i, element := range snapshot.Actors {
+	jsonBug.Actors = make([]JSONIdentity, len(snapshot.Actors()))
+	for i, element := range snapshot.Actors() {
 		jsonBug.Actors[i] = NewJSONIdentity(element)
 	}
 
-	jsonBug.Participants = make([]JSONIdentity, len(snapshot.Participants))
-	for i, element := range snapshot.Participants {
+	jsonBug.Participants = make([]JSONIdentity, len(snapshot.Participants()))
+	for i, element := range snapshot.Participants() {
 		jsonBug.Participants[i] = NewJSONIdentity(element)
 	}
 
-	jsonBug.Comments = make([]JSONComment, len(snapshot.Comments))
-	for i, comment := range snapshot.Comments {
+	jsonBug.Comments = make([]JSONComment, len(snapshot.Comments()))
+	for i, comment := range snapshot.Comments() {
 		jsonBug.Comments[i] = NewJSONComment(comment)
 	}
 
@@ -247,12 +247,12 @@ func showOrgModeFormatter(env *Env, snapshot *bug.Snapshot) error {
 	// Header
 	env.out.Printf("%s [%s] %s\n",
 		snapshot.Id().Human(),
-		snapshot.Status,
-		snapshot.Title,
+		snapshot.Status(),
+		snapshot.Title(),
 	)
 
 	env.out.Printf("* Author: %s\n",
-		snapshot.Author.DisplayName(),
+		snapshot.Author().DisplayName(),
 	)
 
 	env.out.Printf("* Creation Time: %s\n",
@@ -264,8 +264,8 @@ func showOrgModeFormatter(env *Env, snapshot *bug.Snapshot) error {
 	)
 
 	// Labels
-	var labels = make([]string, len(snapshot.Labels))
-	for i, label := range snapshot.Labels {
+	var labels = make([]string, len(snapshot.Labels()))
+	for i, label := range snapshot.Labels() {
 		labels[i] = string(label)
 	}
 
@@ -277,8 +277,8 @@ func showOrgModeFormatter(env *Env, snapshot *bug.Snapshot) error {
 	}
 
 	// Actors
-	var actors = make([]string, len(snapshot.Actors))
-	for i, actor := range snapshot.Actors {
+	var actors = make([]string, len(snapshot.Actors()))
+	for i, actor := range snapshot.Actors() {
 		actors[i] = fmt.Sprintf("%s %s",
 			actor.Id().Human(),
 			actor.DisplayName(),
@@ -290,8 +290,8 @@ func showOrgModeFormatter(env *Env, snapshot *bug.Snapshot) error {
 	)
 
 	// Participants
-	var participants = make([]string, len(snapshot.Participants))
-	for i, participant := range snapshot.Participants {
+	var participants = make([]string, len(snapshot.Participants()))
+	for i, participant := range snapshot.Participants() {
 		participants[i] = fmt.Sprintf("%s %s",
 			participant.Id().Human(),
 			participant.DisplayName(),
@@ -304,15 +304,15 @@ func showOrgModeFormatter(env *Env, snapshot *bug.Snapshot) error {
 
 	env.out.Printf("* Comments:\n")
 
-	for i, comment := range snapshot.Comments {
+	for i, comment := range snapshot.Comments() {
 		var message string
 		env.out.Printf("** #%d %s\n",
 			i, comment.Author.DisplayName())
 
-		if comment.Message == "" {
+		if comment.Message() == "" {
 			message = "No description provided."
 		} else {
-			message = strings.ReplaceAll(comment.Message, "\n", "\n: ")
+			message = strings.ReplaceAll(comment.Message(), "\n", "\n: ")
 		}
 
 		env.out.Printf(": %s\n", message)
