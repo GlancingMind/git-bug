@@ -1,11 +1,14 @@
 package bug
 
 import (
+	"fmt"
+
 	"github.com/dustin/go-humanize"
 
 	"github.com/MichaelMure/git-bug/entity"
 	"github.com/MichaelMure/git-bug/identity"
 	"github.com/MichaelMure/git-bug/repository"
+	"github.com/MichaelMure/git-bug/util/text"
 	"github.com/MichaelMure/git-bug/util/timestamp"
 )
 
@@ -35,6 +38,20 @@ func (c Comment) Id() entity.Id {
 // The Message of the comment
 func (c Comment) Message() string {
 	return c.message
+}
+
+// Replace the comment message with the given one.
+func (c *Comment) ReplaceMessageWith(message string) error {
+	if !text.Safe(message) {
+		return fmt.Errorf("message is not fully printable")
+	}
+	c.message = message
+	return nil
+}
+
+// Attache the files to the comment.
+func (c *Comment) AttacheFiles(files []repository.Hash) {
+	c.Files = files
 }
 
 // FormatTimeRel format the UnixTime of the comment for human consumption

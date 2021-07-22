@@ -73,8 +73,8 @@ func (op *EditCommentOperation) Apply(snapshot *Snapshot) {
 	// Updating the corresponding comment
 	for i := range snapshot.Comments() {
 		if snapshot.Comments()[i].Id() == commentId {
-			snapshot.Comments()[i].message = op.Message
-			snapshot.Comments()[i].Files = op.Files
+			snapshot.Comments()[i].ReplaceMessageWith(op.Message)
+			snapshot.Comments()[i].AttacheFiles(op.Files)
 			break
 		}
 	}
