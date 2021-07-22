@@ -81,18 +81,6 @@ func TestQueries(t *testing.T) {
                 }
               }
       
-              comments(first: 2) {
-                pageInfo {
-                  endCursor
-                  hasNextPage
-                  startCursor
-                  hasPreviousPage
-                }
-                nodes {
-                  files
-                }
-              }
-      
               operations(first: 20) {
                 pageInfo {
                   endCursor

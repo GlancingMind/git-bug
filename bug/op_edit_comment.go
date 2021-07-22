@@ -53,7 +53,7 @@ func (op *EditCommentOperation) Apply(snapshot *Snapshot) {
 	comment := Comment{
 		id:       commentId,
 		message:  op.Message,
-		Files:    op.Files,
+		files:    op.Files,
 		UnixTime: timestamp.Timestamp(op.UnixTime),
 	}
 

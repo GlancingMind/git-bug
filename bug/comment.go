@@ -19,7 +19,7 @@ type Comment struct {
 	id      entity.Id
 	Author  identity.Interface
 	message string
-	Files   []repository.Hash
+	files   []repository.Hash
 
 	// Creation time of the comment.
 	// Should be used only for human display, never for ordering as we can't rely on it in a distributed system.
@@ -51,7 +51,12 @@ func (c *Comment) ReplaceMessageWith(message string) error {
 
 // Attache the files to the comment.
 func (c *Comment) AttacheFiles(files []repository.Hash) {
-	c.Files = files
+	c.files = files
+}
+
+// Return the comments attached files.
+func (c *Comment) Files() []repository.Hash {
+	return c.files
 }
 
 // FormatTimeRel format the UnixTime of the comment for human consumption
